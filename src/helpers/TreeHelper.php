@@ -5,7 +5,7 @@ namespace concepture\core\helpers;
 class TreeHelper
 {
 
-    public function buildTree(array &$elements, $parentId = 0, $from = 'id', $to = "title", $parent = 'parent_id')
+    public static function buildTree(array &$elements, $parentId = 0, $from = 'id', $to = "title", $parent = 'parent_id')
     {
         $branch = array();
         foreach ($elements as $element) {
