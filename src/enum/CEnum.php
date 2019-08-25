@@ -26,4 +26,18 @@ class CEnum {
 
         return $constants;
     }
+
+    public static function label($value) {
+        $labels = static::labels();
+        if (isset($labels[$value])){
+            return $labels[$value];
+        }
+
+        return "unknown";
+    }
+
+    public static function labels()
+    {
+        return [];
+    }
 }
