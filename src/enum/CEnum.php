@@ -27,6 +27,16 @@ class CEnum {
         return $constants;
     }
 
+    public static function arrayList() {
+        $values = self::all();
+        $list = [];
+        foreach ($values as $value){
+            $list[$value] = self::label($value);
+        }
+
+        return $list;
+    }
+
     public static function label($value) {
         $labels = static::labels();
         if (isset($labels[$value])){
