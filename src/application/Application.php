@@ -7,7 +7,7 @@ use concepture\core\helpers\ArrayHelper;
 use concepture\core\helpers\ContainerHelper;
 use concepture\domain\Domain;
 
-abstract class Application extends Component
+class Application extends Component
 {
     private $_domains;
 
@@ -16,7 +16,10 @@ abstract class Application extends Component
         $this->_domains[$name] = $domain;
     }
 
-    abstract static function domains();
+    public static function domains()
+    {
+        return [];
+    }
 
     private function getDomain($key)
     {
