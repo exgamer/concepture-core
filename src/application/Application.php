@@ -9,16 +9,23 @@ use concepture\domain\Domain;
 
 class Application extends Component
 {
+    public $domains = [];
+
     private $_domains;
+
+    public function getDomains()
+    {
+        return $this->domains;
+    }
+
+    public function setDomains($domains)
+    {
+        $this->domains = $domains;
+    }
 
     private function setDomain($name, Domain $domain)
     {
         $this->_domains[$name] = $domain;
-    }
-
-    public static function domains()
-    {
-        return [];
     }
 
     private function getDomain($key)
@@ -26,7 +33,7 @@ class Application extends Component
         if (isset($this->_domains[$key])){
             return $this->_domains[$key];
         }
-        $domains = static::domains();
+        $domains = $this->getDomains();
         $config = ArrayHelper::getValue($domains, $key);
         if ($config === null){
             return $config;
