@@ -42,6 +42,14 @@ abstract class Dto extends BaseObject
 
     public function load($data)
     {
+        $rules = $this->rules();
+        $attributes = array_keys($rules);
+        foreach ($attributes as $attribute){
+            if (isset($data[$attribute])){
+                continue;
+            }
+            $data[$attribute] = null;
+        }
         foreach ($data as $name => $value){
             if (!$this->hasRule($name)){
                 throw new \Exception("no rule for {$name}");
