@@ -13,6 +13,7 @@ abstract class Dto extends BaseObject
 {
     protected $errors = [];
     protected $protectedData = [];
+    private $data = [];
 
     public function rules()
     {
@@ -56,7 +57,7 @@ abstract class Dto extends BaseObject
             }
             $rule = $this->getRule($name);
             $this->validate($name, $value, $rule);
-            $this->{$name} = $value;
+            $this->data[$name] = $value;
         }
     }
 
@@ -77,7 +78,7 @@ abstract class Dto extends BaseObject
     protected function validateData($name, $value, $rule)
     {
         $validator = ContainerHelper::createObject($rule);
-        if ($validator->validate($value) === false){
+        if ($validator->validate($value) == false){
             $this->errors[$name] = $validator->getMessage();
         }
         if ($validator instanceof ProtectedValidator){
@@ -105,13 +106,8 @@ abstract class Dto extends BaseObject
 
     public function getData()
     {
-        $result = [];
-        $rules = $this->rules();
-        foreach ($rules as $name => $rule){
-            $result[$name] = $this->{$name};
-        }
 
-        return $result;
+        return $this->data;
     }
 
     public function getDataForUpdate()
@@ -121,37 +117,18 @@ abstract class Dto extends BaseObject
             if (!$this->hasRule($name)){
                 throw new \Exception("no rule for {$name}");
             }
-            $this->validate($name, $value);
+            $rule = $this->getRule($name);
+            $this->validate($name, $value, $rule);
         }
         $result = [];
         $rules = $this->rules();
         foreach ($rules as $name => $rule){
-            if (isset($this->protectedData[$name])){
+            if (in_array($name, $this->protectedData)){
                 continue;
             }
-            $result[$name] = $this->{$name};
+            $result[$name] = $data[$name];
         }
 
         return $result;
-    }
-
-    public function __set($name, $value)
-    {
-        $setter = 'set' . $name;
-        if (method_exists($this, $setter)) {
-            $this->$setter($value);
-        } elseif (method_exists($this, 'get' . $name)) {
-            throw new \Exception('Setting read-only property: ' . get_class($this) . '::' . $name);
-        }
-    }
-
-    public function __get($name)
-    {
-        $getter = 'get' . $name;
-        if (method_exists($this, $getter)) {
-            return $this->$getter();
-        } elseif (method_exists($this, 'set' . $name)) {
-            throw new \Exception('Getting write-only property: ' . get_class($this) . '::' . $name);
-        }
     }
 }
