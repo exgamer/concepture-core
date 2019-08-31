@@ -7,7 +7,7 @@ class ContainerHelper
     public static function createObject($config)
     {
         $className = "";
-        $arguments = null;
+        $arguments = [];
         if (is_string($config)){
             $className = $config;
         }
