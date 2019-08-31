@@ -1,12 +1,12 @@
 <?php
-namespace concepture\service;
+namespace concepture\core\service;
 
-use concepture\base\Component;
-use concepture\base\ModifyInterface;
-use concepture\base\ReadInterface;
+use concepture\core\base\Component;
+use concepture\core\base\ModifyInterface;
+use concepture\core\base\ReadInterface;
 use concepture\core\helper\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
-use concepture\repository\Repository;
+use concepture\core\repository\Repository;
 
 abstract class Service extends Component implements ReadInterface, ModifyInterface
 {

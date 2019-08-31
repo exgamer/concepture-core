@@ -1,9 +1,9 @@
 <?php
 
-namespace concepture\base;
+namespace concepture\core\base;
 
 
-use concepture\base\Dto;
+use concepture\core\base\Dto;
 
 interface ModifyInterface
 {

@@ -1,5 +1,5 @@
 <?php
-namespace concepture\base;
+namespace concepture\core\base;
 
 /**
  * SearchDto

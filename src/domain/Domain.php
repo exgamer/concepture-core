@@ -1,10 +1,10 @@
 <?php
-namespace concepture\domain;
+namespace concepture\core\domain;
 
-use concepture\base\Component;
+use concepture\core\base\Component;
 use concepture\core\helpers\ArrayHelper;
 use concepture\core\helpers\ContainerHelper;
-use concepture\service\Service;
+use concepture\core\service\Service;
 
 abstract class Domain extends Component
 {

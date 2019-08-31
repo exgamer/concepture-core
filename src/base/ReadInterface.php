@@ -1,7 +1,7 @@
 <?php
-namespace concepture\base;
+namespace concepture\core\base;
 
-use concepture\base\SearchDto;
+use concepture\core\base\SearchDto;
 
 interface ReadInterface
 {
