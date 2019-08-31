@@ -82,7 +82,7 @@ abstract class Dto extends BaseObject
             $this->errors[$name] = $validator->getMessage();
         }
         if ($validator instanceof ProtectedValidator){
-            $this->protectedData[] = $name;
+            $this->protectedData[$name] = $name;
         }
     }
 
