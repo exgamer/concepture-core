@@ -46,28 +46,29 @@ abstract class Dto extends BaseObject
             if (!$this->hasRule($name)){
                 throw new \Exception("no rule for {$name}");
             }
-            $this->validate($name, $value);
+            $rule = $this->getRule($name);
+            $this->validate($name, $value, $rule);
             $this->{$name} = $value;
         }
     }
 
-    protected function validate($name, $value)
+    protected function validate($name, $value, $rule)
     {
-        if (is_array($value)){
-            if (isset($value[0])){
-                foreach ($value as $v){
-                    $this->validateData($name, $v);
+        if (is_array($rule)){
+            if (isset($rule[0])){
+                foreach ($rule as $r){
+                    $this->validateData($name, $value, $r);
                 }
 
                 return;
             }
         }
-        $this->validateData($name, $value);
+        $this->validateData($name, $value, $rule);
     }
 
-    protected function validateData($name, $value)
+    protected function validateData($name, $value, $rule)
     {
-        $validator = ContainerHelper::createObject($value);
+        $validator = ContainerHelper::createObject($rule);
         if ($validator->validate($value) === false){
             $this->errors[$name] = $validator->getMessage();
         }

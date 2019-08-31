@@ -3,7 +3,7 @@ namespace concepture\core\service;
 
 use concepture\core\base\Component;
 use concepture\core\base\Dto;
-use concepture\core\helper\ClassHelper;
+use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
 use concepture\core\repository\Repository;
 
@@ -25,8 +25,8 @@ abstract class Service extends Component
         return $id;
     }
 
-    public function beforeInsert(&$data){}
-    public function afterInsert(&$data){}
+    protected function beforeInsert(&$data){}
+    protected function afterInsert(&$data){}
 
     public function update($data, $condition)
     {
@@ -40,8 +40,8 @@ abstract class Service extends Component
         $this->afterUpdate($data, $condition);
     }
 
-    public function beforeUpdate(&$data, $condition){}
-    public function afterUpdate(&$data, $condition){}
+    protected function beforeUpdate(&$data, $condition){}
+    protected function afterUpdate(&$data, $condition){}
 
 
     public function delete($condition)
@@ -51,8 +51,8 @@ abstract class Service extends Component
         $this->afterDelete($condition);
     }
 
-    public function beforeDelete($condition){}
-    public function afterDelete($condition){}
+    protected function beforeDelete($condition){}
+    protected function afterDelete($condition){}
 
     protected function getRepositoryClass($folder = "repositories")
     {
@@ -66,7 +66,7 @@ abstract class Service extends Component
     /**
      * @return Repository
      */
-    private function getRepository()
+    protected function getRepository()
     {
         if ($this->_repository instanceof Repository){
             return $this->_repository;
@@ -92,7 +92,7 @@ abstract class Service extends Component
      * Получить класс DTO
      * @return string
      */
-    public function getDtoClass()
+    protected function getDtoClass()
     {
         $className = get_class($this);
         $name = ClassHelper::getName($className, "Service");

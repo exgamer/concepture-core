@@ -1,5 +1,5 @@
 <?php
-namespace concepture\core\helper;
+namespace concepture\core\helpers;
 
 use concepture\core\helpers\StringHelper;
 
