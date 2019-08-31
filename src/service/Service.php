@@ -11,20 +11,48 @@ abstract class Service extends Component
 {
     private $_repository;
 
-    public function insert(Dto $dto)
+    public function insert(&$data)
     {
-        return $this->getRepository()->insert($dto->getData());
+        $this->beforeInsert($data);
+        $dto = $this->getDto();
+        $dto->load($data);
+        if ($dto->hasErrors()){
+
+        }
+        $id = $this->getRepository()->insert($dto->getData());
+        $this->afterInsert($data);
+
+        return $id;
     }
 
-    public function update(Dto $dto, $condition)
+    public function beforeInsert(&$data){}
+    public function afterInsert(&$data){}
+
+    public function update($data, $condition)
     {
-        return $this->getRepository()->update($dto->getDataForUpdate(), $condition);
+        $this->beforeUpdate($data, $condition);
+        $dto = $this->getDto();
+        $dto->load($data);
+        if ($dto->hasErrors()){
+
+        }
+        $this->getRepository()->update($dto->getDataForUpdate(), $condition);
+        $this->afterUpdate($data, $condition);
     }
+
+    public function beforeUpdate(&$data, $condition){}
+    public function afterUpdate(&$data, $condition){}
+
 
     public function delete($condition)
     {
-        return $this->getRepository()->delete($condition);
+        $this->beforeDelete($condition);
+        $this->getRepository()->delete($condition);
+        $this->afterDelete($condition);
     }
+
+    public function beforeDelete($condition){}
+    public function afterDelete($condition){}
 
     protected function getRepositoryClass($folder = "repositories")
     {
@@ -50,9 +78,33 @@ abstract class Service extends Component
         return $this->_repository;
     }
 
+    /**
+     * @return Dto
+     */
+    public function getDto()
+    {
+        $dtoClass = $this->getDtoClass();
+
+        return new $dtoClass();
+    }
+
+    /**
+     * Получить класс DTO
+     * @return string
+     */
+    public function getDtoClass()
+    {
+        $className = get_class($this);
+        $name = ClassHelper::getName($className, "Service");
+        $nameSpace = ClassHelper::getNamespace($className);
+
+        return  $nameSpace."\\"."dto\\".$name."Dto";
+    }
+
     public function __get($name)
     {
         if ($name === 'repository') {
+
             return $this->getRepository();
         }
 

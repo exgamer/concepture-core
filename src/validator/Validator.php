@@ -16,8 +16,4 @@ abstract class Validator extends Component
     {
         return $this->message;
     }
-
-
-
-
 }
