@@ -6,7 +6,7 @@ namespace concepture\core\base;
  *
  * @author citizenzer <exgamer@live.ru>
  */
-abstract class Component extends Object
+abstract class Component extends BaseObject
 {
 
 }

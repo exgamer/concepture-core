@@ -6,7 +6,7 @@ namespace concepture\core\base;
  *
  * @author citizenzer <exgamer@live.ru>
  */
-abstract class Object
+abstract class BaseObject
 {
     public function __construct($config = [])
     {

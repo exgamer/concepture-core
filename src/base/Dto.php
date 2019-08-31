@@ -6,7 +6,7 @@ namespace concepture\core\base;
  *
  * @author citizenzer <exgamer@live.ru>
  */
-abstract class Dto extends Object
+abstract class Dto extends BaseObject
 {
 
 }
