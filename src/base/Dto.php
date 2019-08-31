@@ -113,20 +113,16 @@ abstract class Dto extends BaseObject
     public function getDataForUpdate()
     {
         $data = $this->getData();
-        foreach ($data as $name => $value){
-            if (!$this->hasRule($name)){
-                throw new \Exception("no rule for {$name}");
-            }
-            $rule = $this->getRule($name);
-            $this->validate($name, $value, $rule);
-        }
         $result = [];
-        $rules = $this->rules();
-        foreach ($rules as $name => $rule){
-            if (in_array($name, $this->protectedData)){
+        $attributes = array_keys($this->rules());
+        foreach ($attributes as $attribute){
+            if (in_array($attribute, $this->protectedData)){
                 continue;
             }
-            $result[$name] = $data[$name];
+            if (!isset($data[$attribute])){
+                continue;
+            }
+            $result[$attribute] = $data[$attribute];
         }
 
         return $result;
