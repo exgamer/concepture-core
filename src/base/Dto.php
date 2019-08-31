@@ -79,7 +79,7 @@ abstract class Dto extends BaseObject
 
     public function hasErrors()
     {
-        if (empty($this->errors)){
+        if (! empty($this->errors)){
 
             return true;
         }
