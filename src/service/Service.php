@@ -36,7 +36,7 @@ abstract class Service extends Component implements ReadInterface, ModifyInterfa
     public function __get($name)
     {
         if ($name === 'repository') {
-            return $this->getRepository($name);
+            return $this->getRepository();
         }
 
         return parent::__get($name);
