@@ -2,15 +2,29 @@
 namespace concepture\core\service;
 
 use concepture\core\base\Component;
-use concepture\core\base\ModifyInterface;
-use concepture\core\base\ReadInterface;
+use concepture\core\base\Dto;
 use concepture\core\helper\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
 use concepture\core\repository\Repository;
 
-abstract class Service extends Component implements ReadInterface, ModifyInterface
+abstract class Service extends Component
 {
     private $_repository;
+
+    public function insert(Dto $dto)
+    {
+        return $this->getRepository()->insert($dto->getData());
+    }
+
+    public function update(Dto $dto, $condition)
+    {
+        return $this->getRepository()->update($dto->getDataForUpdate(), $condition);
+    }
+
+    public function delete($condition)
+    {
+        return $this->getRepository()->delete($condition);
+    }
 
     protected function getRepositoryClass($folder = "repositories")
     {
@@ -21,6 +35,9 @@ abstract class Service extends Component implements ReadInterface, ModifyInterfa
         return  $nameSpace.'\\'.$folder.'\\'.$name."Repository";
     }
 
+    /**
+     * @return Repository
+     */
     private function getRepository()
     {
         if ($this->_repository instanceof Repository){
