@@ -12,12 +12,11 @@ abstract class Service extends Component implements ReadInterface, ModifyInterfa
 {
     private $_repository;
 
-    protected function getRepositoryClass()
+    protected function getRepositoryClass($folder = "repositories")
     {
         $className = get_class($this);
         $name = ClassHelper::getName($className, "Service");
         $nameSpace = ClassHelper::getNamespace($className);
-        $folder = "repositories";
 
         return  $nameSpace.'\\'.$folder.'\\'.$name."Repository";
     }
