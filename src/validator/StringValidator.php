@@ -3,7 +3,7 @@ namespace concepture\core\validator;
 
 class StringValidator extends Validator
 {
-    protected $message = "";
+    protected $message = "value is not string";
 
     public function validate($value)
     {

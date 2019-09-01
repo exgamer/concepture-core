@@ -20,6 +20,10 @@ abstract class Dto extends BaseObject
         return [];
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function hasRule($name)
     {
         $rule = $this->getRule($name);
@@ -86,6 +90,9 @@ abstract class Dto extends BaseObject
         }
     }
 
+    /**
+     * @return bool
+     */
     public function hasErrors()
     {
         if (! empty($this->errors)){
@@ -97,19 +104,28 @@ abstract class Dto extends BaseObject
     }
 
     /**
-     * @return array
+     * @return DataValidationErrors
      */
     public function getErrors()
     {
-        return $this->errors;
+        $errors = new DataValidationErrors();
+        $errors->setErrors($this->errors);
+
+        return $errors;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
 
         return $this->data;
     }
 
+    /**
+     * @return array
+     */
     public function getDataForUpdate()
     {
         $data = $this->getData();

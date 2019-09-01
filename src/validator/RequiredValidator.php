@@ -3,7 +3,7 @@ namespace concepture\core\validator;
 
 class RequiredValidator extends Validator
 {
-    protected $message = "";
+    protected $message = "value is required";
 
     public function validate($value)
     {

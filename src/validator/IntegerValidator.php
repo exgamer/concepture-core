@@ -3,7 +3,7 @@ namespace concepture\core\validator;
 
 class IntegerValidator extends Validator
 {
-    protected $message = "";
+    protected $message = "value is not integer";
 
     public function validate($value)
     {

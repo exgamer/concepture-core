@@ -17,7 +17,7 @@ abstract class Service extends Component
         $dto = $this->getDto();
         $dto->load($data);
         if ($dto->hasErrors()){
-
+            return $dto->getErrors();
         }
         $id = $this->getRepository()->insert($dto->getData());
         $this->afterInsert($data);
@@ -34,7 +34,7 @@ abstract class Service extends Component
         $dto = $this->getDto();
         $dto->load($data);
         if ($dto->hasErrors()){
-
+            return $dto->getErrors();
         }
         $this->getRepository()->update($dto->getDataForUpdate(), $condition);
         $this->afterUpdate($data, $condition);
