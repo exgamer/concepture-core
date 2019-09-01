@@ -16,7 +16,11 @@ class ContainerHelper
             $arguments = ArrayHelper::getValue($config, "arguments", []);
         }
         $reflector = new \ReflectionClass($className);
-
+        if (!empty($arguments)){
+            $arguments = [
+                $arguments
+            ];
+        }
         return $reflector->newInstanceArgs($arguments);
     }
 

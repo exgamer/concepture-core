@@ -90,14 +90,15 @@ abstract class Service extends Component
 
     /**
      * Получить класс DTO
+     * @param string $folder
      * @return string
      */
-    protected function getDtoClass()
+    protected function getDtoClass($folder = "dto")
     {
         $className = get_class($this);
         $name = ClassHelper::getName($className, "Service");
         $nameSpace = ClassHelper::getNamespace($className);
 
-        return  $nameSpace."\\"."dto\\".$name."Dto";
+        return  $nameSpace."\\".$folder."\\".$name."Dto";
     }
 }
