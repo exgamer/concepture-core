@@ -24,12 +24,12 @@ abstract class Storage extends Component implements ReadInterface, ModifyInterfa
         // TODO: Implement delete() method.
     }
 
-    public function one(SearchDto $searchDto = null)
+    public function one($condition)
     {
         // TODO: Implement one() method.
     }
 
-    public function all(SearchDto $searchDto = null)
+    public function all($condition, $config)
     {
         // TODO: Implement all() method.
     }

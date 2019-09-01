@@ -3,7 +3,7 @@ namespace concepture\core\base;
 
 interface ReadInterface
 {
-    public function one(SearchDto $searchDto = null);
+    public function one($condition);
 
-    public function all(SearchDto $searchDto = null);
+    public function all($condition, $config);
 }
