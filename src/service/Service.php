@@ -10,6 +10,7 @@ use concepture\core\storage\Storage;
 abstract class Service extends Component
 {
     private $_storage;
+    public $storageDir = null;
 
     public function insert(&$data)
     {
@@ -59,8 +60,12 @@ abstract class Service extends Component
         $className = get_class($this);
         $name = ClassHelper::getName($className, "Service");
         $nameSpace = ClassHelper::getNamespace($className);
+        $extPath = "";
+        if ($this->storageDir){
+            $extPath .= $this->storageDir.'\\';
+        }
 
-        return  $nameSpace.'\\'.$folder.'\\'.$name."Storage";
+        return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name."Storage";
     }
 
     /**
