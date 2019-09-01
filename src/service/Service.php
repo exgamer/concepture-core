@@ -46,7 +46,6 @@ abstract class Service extends Component
     protected function beforeUpdate(&$data, DataReadCondition $condition){}
     protected function afterUpdate(&$data, DataReadCondition $condition){}
 
-
     public function delete(DataReadCondition $condition)
     {
         $this->beforeDelete($condition);
