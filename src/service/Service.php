@@ -5,11 +5,11 @@ use concepture\core\base\Component;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
-use concepture\core\repository\Repository;
+use concepture\core\storage\Storage;
 
 abstract class Service extends Component
 {
-    private $_repository;
+    private $_storage;
 
     public function insert(&$data)
     {
@@ -19,7 +19,7 @@ abstract class Service extends Component
         if ($dto->hasErrors()){
             return $dto->getErrors();
         }
-        $id = $this->getRepository()->insert($dto->getData());
+        $id = $this->getStorage()->insert($dto->getData());
         $this->afterInsert($data);
 
         return $id;
@@ -36,7 +36,7 @@ abstract class Service extends Component
         if ($dto->hasErrors()){
             return $dto->getErrors();
         }
-        $this->getRepository()->update($dto->getDataForUpdate(), $condition);
+        $this->getStorage()->update($dto->getDataForUpdate(), $condition);
         $this->afterUpdate($data, $condition);
     }
 
@@ -47,35 +47,35 @@ abstract class Service extends Component
     public function delete($condition)
     {
         $this->beforeDelete($condition);
-        $this->getRepository()->delete($condition);
+        $this->getStorage()->delete($condition);
         $this->afterDelete($condition);
     }
 
     protected function beforeDelete($condition){}
     protected function afterDelete($condition){}
 
-    protected function getRepositoryClass($folder = "repositories")
+    protected function getStorageClass($folder = "storage")
     {
         $className = get_class($this);
         $name = ClassHelper::getName($className, "Service");
         $nameSpace = ClassHelper::getNamespace($className);
 
-        return  $nameSpace.'\\'.$folder.'\\'.$name."Repository";
+        return  $nameSpace.'\\'.$folder.'\\'.$name."Storage";
     }
 
     /**
-     * @return Repository
+     * @return Storage
      */
-    protected function getRepository()
+    protected function getStorage()
     {
-        if ($this->_repository instanceof Repository){
-            return $this->_repository;
+        if ($this->_storage instanceof Storage){
+            return $this->_storage;
         }
-        $className = $this->getRepositoryClass();
-        $repository = ContainerHelper::createObject($className);
-        $this->_repository = $repository;
+        $className = $this->getStorageClass();
+        $storage = ContainerHelper::createObject($className);
+        $this->_storage = $storage;
 
-        return $this->_repository;
+        return $this->_storage;
     }
 
     /**
@@ -99,15 +99,5 @@ abstract class Service extends Component
         $nameSpace = ClassHelper::getNamespace($className);
 
         return  $nameSpace."\\"."dto\\".$name."Dto";
-    }
-
-    public function __get($name)
-    {
-        if ($name === 'repository') {
-
-            return $this->getRepository();
-        }
-
-        return parent::__get($name);
     }
 }

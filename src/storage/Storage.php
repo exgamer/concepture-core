@@ -1,5 +1,5 @@
 <?php
-namespace concepture\core\repository;
+namespace concepture\core\storage;
 
 use concepture\core\base\Component;
 use concepture\core\base\ConnectionInterface;
@@ -7,7 +7,7 @@ use concepture\core\base\ModifyInterface;
 use concepture\core\base\ReadInterface;
 use concepture\core\base\SearchDto;
 
-abstract class Repository extends Component implements ReadInterface, ModifyInterface, ConnectionInterface
+abstract class Storage extends Component implements ReadInterface, ModifyInterface, ConnectionInterface
 {
     public function insert($params)
     {
