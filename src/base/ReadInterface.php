@@ -3,7 +3,7 @@ namespace concepture\core\base;
 
 interface ReadInterface
 {
-    public function one($condition);
+    public function one(DataReadCondition $condition);
 
-    public function all($condition, $config);
+    public function all(DataReadCondition $condition, DataReadConfig $config);
 }
