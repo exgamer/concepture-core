@@ -20,6 +20,32 @@ abstract class Dto extends BaseObject
         return [];
     }
 
+    public function filters()
+    {
+        return [];
+    }
+
+    public function hasFilter($name)
+    {
+        $rule = $this->getRule($name);
+        if ($rule === null){
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function getFilter($name)
+    {
+        $filters = $this->filters();
+        if (! isset($filters[$name])){
+            return null;
+        }
+
+        return $filters[$name];
+    }
+
     /**
      * @param $name
      * @return bool
@@ -59,10 +85,35 @@ abstract class Dto extends BaseObject
             if (!$this->hasRule($name)){
                 throw new \Exception("no rule for {$name}");
             }
+            $filter = $this->getFilter($name);
+            if ($filter){
+                $value = $this->filter($name,$value, $filter);
+            }
             $rule = $this->getRule($name);
             $this->validate($name, $value, $rule);
             $this->data[$name] = $value;
         }
+    }
+
+    protected function filter($name, $value, $filter)
+    {
+        if (is_array($filter)){
+            if (isset($filter[0])){
+                foreach ($filter as $f){
+                    $value = $this->filterData($name, $value, $f);
+                }
+
+                return $value;
+            }
+        }
+        return $this->filterData($name, $value, $filter);
+    }
+
+    protected function filterData($name, $value, $filter)
+    {
+        $filterObj = ContainerHelper::createObject($filter);
+
+        return $filterObj->filter($value);
     }
 
     protected function validate($name, $value, $rule)

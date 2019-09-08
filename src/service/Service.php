@@ -2,8 +2,6 @@
 namespace concepture\core\service;
 
 use concepture\core\base\Component;
-use concepture\core\base\DataReadCondition;
-use concepture\core\base\DataReadConfig;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
@@ -13,6 +11,7 @@ abstract class Service extends Component
 {
     private $_storage;
     public $storageDir = null;
+    public $storageConfig = [];
 
     public function insert(&$data)
     {
@@ -31,7 +30,7 @@ abstract class Service extends Component
     protected function beforeInsert(&$data){}
     protected function afterInsert(&$data){}
 
-    public function update($data, DataReadCondition $condition)
+    public function update($data, $condition)
     {
         $this->beforeUpdate($data, $condition);
         $dto = $this->getDto();
@@ -43,28 +42,19 @@ abstract class Service extends Component
         $this->afterUpdate($data, $condition);
     }
 
-    protected function beforeUpdate(&$data, DataReadCondition $condition){}
-    protected function afterUpdate(&$data, DataReadCondition $condition){}
+    protected function beforeUpdate(&$data, $condition){}
+    protected function afterUpdate(&$data, $condition){}
 
-    public function delete(DataReadCondition $condition)
+
+    public function delete($condition)
     {
         $this->beforeDelete($condition);
         $this->getStorage()->delete($condition);
         $this->afterDelete($condition);
     }
 
-    protected function beforeDelete(DataReadCondition $condition){}
-    protected function afterDelete(DataReadCondition $condition){}
-
-    public function one(DataReadCondition $condition)
-    {
-        $this->getStorage()->one($condition);
-    }
-
-    public function all($condition, DataReadConfig $config)
-    {
-        $this->getStorage()->all($condition, $config);
-    }
+    protected function beforeDelete($condition){}
+    protected function afterDelete($condition){}
 
     protected function getStorageClass($folder = "storage")
     {
@@ -88,7 +78,11 @@ abstract class Service extends Component
             return $this->_storage;
         }
         $className = $this->getStorageClass();
-        $storage = ContainerHelper::createObject($className);
+        $storageConfig = [
+            'class' => $className,
+            'arguments' => $this->storageConfig
+        ];
+        $storage = ContainerHelper::createObject($storageConfig);
         $this->_storage = $storage;
 
         return $this->_storage;
