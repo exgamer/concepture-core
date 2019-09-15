@@ -57,6 +57,16 @@ abstract class Service extends Component
     protected function beforeDelete($condition){}
     protected function afterDelete($condition){}
 
+    public function one($condition)
+    {
+        return $this->getStorage()->one($condition);
+    }
+
+    public function all($condition)
+    {
+        return $this->getStorage()->all($condition);
+    }
+
     protected function getStorageClass($folder = "storage")
     {
         $className = get_class($this);
