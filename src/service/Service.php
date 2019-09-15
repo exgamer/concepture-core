@@ -80,8 +80,8 @@ abstract class Service extends Component
         }
         $className = $this->getStorageClass();
         $storageConfig = [
-            'class' => $className,
-            'arguments' => $this->storageConfig
+            $className,
+            $this->storageConfig
         ];
         $storage = ContainerHelper::createObject($storageConfig);
         $this->_storage = $storage;

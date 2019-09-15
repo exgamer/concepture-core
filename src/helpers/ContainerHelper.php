@@ -12,8 +12,8 @@ class ContainerHelper
             $className = $config;
         }
         if (is_array($config)){
-            $className = ArrayHelper::getValue($config, "class");
-            $arguments = ArrayHelper::getValue($config, "arguments", []);
+            $className = ArrayHelper::getValue($config, 0);
+            $arguments = ArrayHelper::getValue($config, 1, []);
         }
         $reflector = new \ReflectionClass($className);
         if (!empty($arguments)){
