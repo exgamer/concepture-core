@@ -15,22 +15,22 @@ abstract class Storage extends Component implements ReadInterface, ModifyInterfa
         // TODO: Implement insert() method.
     }
 
-    public function update($params, DataReadCondition $condition)
+    public function update($params, $condition)
     {
         // TODO: Implement update() method.
     }
 
-    public function delete(DataReadCondition $condition)
+    public function delete($condition)
     {
         // TODO: Implement delete() method.
     }
 
-    public function one(DataReadCondition $condition)
+    public function one($condition)
     {
         // TODO: Implement one() method.
     }
 
-    public function all(DataReadCondition $condition, DataReadConfig $config)
+    public function all($condition)
     {
         // TODO: Implement all() method.
     }

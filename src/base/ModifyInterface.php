@@ -5,7 +5,7 @@ interface ModifyInterface
 {
 	public function insert($params);
 
-	public function update($params, DataReadCondition $condition);
+	public function update($params, $condition);
 
-	public function delete(DataReadCondition $condition);
+	public function delete($condition);
 }

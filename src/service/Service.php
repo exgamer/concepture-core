@@ -31,7 +31,7 @@ abstract class Service extends Component
     protected function beforeInsert(&$data){}
     protected function afterInsert(&$data){}
 
-    public function update($data, DataReadCondition $condition)
+    public function update($data, $condition)
     {
         $this->beforeUpdate($data, $condition);
         $dto = $this->getDto();
@@ -43,19 +43,19 @@ abstract class Service extends Component
         $this->afterUpdate($data, $condition);
     }
 
-    protected function beforeUpdate(&$data, DataReadCondition $condition){}
-    protected function afterUpdate(&$data, DataReadCondition $condition){}
+    protected function beforeUpdate(&$data, $condition){}
+    protected function afterUpdate(&$data, $condition){}
 
 
-    public function delete(DataReadCondition $condition)
+    public function delete($condition)
     {
         $this->beforeDelete($condition);
         $this->getStorage()->delete($condition);
         $this->afterDelete($condition);
     }
 
-    protected function beforeDelete(DataReadCondition $condition){}
-    protected function afterDelete(DataReadCondition $condition){}
+    protected function beforeDelete($condition){}
+    protected function afterDelete($condition){}
 
     protected function getStorageClass($folder = "storage")
     {
