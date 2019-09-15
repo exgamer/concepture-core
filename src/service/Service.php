@@ -81,19 +81,6 @@ abstract class Service extends Component
         return $this->getStorage()->{$storageMethod}($dto->getData(), $config);
     }
 
-    protected function getStorageClass($folder = "storage")
-    {
-        $className = get_class($this);
-        $name = ClassHelper::getName($className, "Service");
-        $nameSpace = ClassHelper::getNamespace($className);
-        $extPath = "";
-        if ($this->storageDir){
-            $extPath .= $this->storageDir.'\\';
-        }
-
-        return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name."Storage";
-    }
-
     public function __call($method, $parameters)
     {
         $storage = $this->getStorage();
@@ -122,6 +109,19 @@ abstract class Service extends Component
         $this->_storage = $storage;
 
         return $this->_storage;
+    }
+
+    protected function getStorageClass($folder = "storage")
+    {
+        $className = get_class($this);
+        $name = ClassHelper::getName($className, "Service");
+        $nameSpace = ClassHelper::getNamespace($className);
+        $extPath = "";
+        if ($this->storageDir){
+            $extPath .= $this->storageDir.'\\';
+        }
+
+        return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name."Storage";
     }
 
     /**
