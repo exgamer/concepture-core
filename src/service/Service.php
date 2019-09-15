@@ -2,7 +2,6 @@
 namespace concepture\core\service;
 
 use concepture\core\base\Component;
-use concepture\core\base\DataReadCondition;
 use concepture\core\base\DataReadConfig;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
@@ -47,25 +46,39 @@ abstract class Service extends Component
     protected function beforeUpdate(&$data, $condition){}
     protected function afterUpdate(&$data, $condition){}
 
-
     public function delete($condition)
     {
         $this->beforeDelete($condition);
-        $this->getStorage()->delete($condition);
+        $dto = $this->getDto();
+        $dto->load($condition);
+        if ($dto->hasErrors()){
+            return $dto->getErrors();
+        }
+        $this->getStorage()->delete($dto->getData());
         $this->afterDelete($condition);
     }
 
     protected function beforeDelete($condition){}
     protected function afterDelete($condition){}
 
-    public function one($condition)
+    public function one($condition, $storageMethod = "one")
     {
-        return $this->getStorage()->one($condition);
+        return $this->read($condition, $storageMethod);
     }
 
-    public function all($condition, DataReadConfig $config)
+    public function all($condition, DataReadConfig $config, $storageMethod = "all")
     {
-        return $this->getStorage()->all($condition, $config);
+        return $this->read($condition, $storageMethod, $config);
+    }
+
+    public function read($condition, $storageMethod, DataReadConfig $config = null)
+    {
+        $dto = $this->getDto();
+        $dto->load($condition);
+        if ($dto->hasErrors()){
+            return $dto->getErrors();
+        }
+        return $this->getStorage()->{$storageMethod}($dto->getData(), $config);
     }
 
     protected function getStorageClass($folder = "storage")
@@ -79,6 +92,17 @@ abstract class Service extends Component
         }
 
         return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name."Storage";
+    }
+
+    public function __call($method, $parameters)
+    {
+        $storage = $this->getStorage();
+        if (method_exists($storage,$method))
+        {
+            return call_user_func_array([$storage, $method], $parameters);
+        }
+
+        parent::__call($method, $parameters);
     }
 
     /**

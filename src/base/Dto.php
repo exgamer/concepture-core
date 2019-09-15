@@ -209,10 +209,10 @@ abstract class Dto extends BaseObject
         $result = [];
         $attributes = array_keys($this->rules());
         foreach ($attributes as $attribute){
-            if (in_array($attribute, $this->protectedData)){
+            if (in_array($attribute, $this->onlyReadData)){
                 continue;
             }
-            if (in_array($attribute, $this->onlyReadData)){
+            if (in_array($attribute, $this->protectedData)){
                 continue;
             }
             if (!isset($data[$attribute])){

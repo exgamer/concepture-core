@@ -23,7 +23,7 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         // TODO: Implement delete() method.
     }
 
-    public function one($condition)
+    public function one($condition, DataReadConfig $config = null)
     {
         // TODO: Implement one() method.
     }
