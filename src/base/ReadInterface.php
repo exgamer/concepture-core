@@ -5,5 +5,5 @@ interface ReadInterface
 {
     public function one($condition);
 
-    public function all($condition);
+    public function all($condition, DataReadConfig $config);
 }

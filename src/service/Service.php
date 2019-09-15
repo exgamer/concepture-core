@@ -3,6 +3,7 @@ namespace concepture\core\service;
 
 use concepture\core\base\Component;
 use concepture\core\base\DataReadCondition;
+use concepture\core\base\DataReadConfig;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
@@ -62,9 +63,9 @@ abstract class Service extends Component
         return $this->getStorage()->one($condition);
     }
 
-    public function all($condition)
+    public function all($condition, DataReadConfig $config)
     {
-        return $this->getStorage()->all($condition);
+        return $this->getStorage()->all($condition, $config);
     }
 
     protected function getStorageClass($folder = "storage")
