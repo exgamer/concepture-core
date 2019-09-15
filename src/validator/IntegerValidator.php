@@ -7,6 +7,9 @@ class IntegerValidator extends Validator
 
     public function validate($value)
     {
+        if (empty($value)){
+            return true;
+        }
 
         return filter_var($value, FILTER_VALIDATE_INT);
     }

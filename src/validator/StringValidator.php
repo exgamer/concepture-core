@@ -7,6 +7,9 @@ class StringValidator extends Validator
 
     public function validate($value)
     {
+        if (empty($value)){
+            return true;
+        }
 
         return is_string($value);
     }

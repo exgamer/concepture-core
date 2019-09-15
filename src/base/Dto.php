@@ -4,6 +4,7 @@ namespace concepture\core\base;
 use concepture\core\helpers\ContainerHelper;
 use concepture\core\validator\OnlyReadValidator;
 use concepture\core\validator\ProtectedValidator;
+use concepture\core\validator\RequiredValidator;
 
 /**
  * Dto
@@ -12,6 +13,7 @@ use concepture\core\validator\ProtectedValidator;
  */
 abstract class Dto extends BaseObject
 {
+    protected $read = false;
     protected $errors = [];
     protected $protectedData = [];
     protected $onlyReadData = [];
@@ -135,6 +137,9 @@ abstract class Dto extends BaseObject
     protected function validateData($name, $value, $rule)
     {
         $validator = ContainerHelper::createObject($rule);
+        if ($this->read && $validator instanceof RequiredValidator){
+            return;
+        }
         if ($validator->validate($value) == false){
             $this->errors[$name] = $validator->getMessage();
         }
@@ -144,6 +149,11 @@ abstract class Dto extends BaseObject
         if ($validator instanceof OnlyReadValidator){
             $this->onlyReadData[$name] = $name;
         }
+    }
+
+    public function read()
+    {
+        $this->read = true;
     }
 
     /**
@@ -177,6 +187,14 @@ abstract class Dto extends BaseObject
     {
 
         return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataForRead()
+    {
+        return array_filter($this->data, function($value) { return !is_null($value) && $value !== ''; });
     }
 
     /**

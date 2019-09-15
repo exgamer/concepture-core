@@ -74,11 +74,12 @@ abstract class Service extends Component
     public function read($condition, $storageMethod, DataReadConfig $config = null)
     {
         $dto = $this->getDto();
+        $dto->read();
         $dto->load($condition);
         if ($dto->hasErrors()){
             return $dto->getErrors();
         }
-        return $this->getStorage()->{$storageMethod}($dto->getData(), $config);
+        return $this->getStorage()->{$storageMethod}($dto->getDataForRead(), $config);
     }
 
     public function __call($method, $parameters)
