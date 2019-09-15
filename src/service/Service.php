@@ -23,7 +23,7 @@ abstract class Service extends Component
         if ($dto->hasErrors()){
             return $dto->getErrors();
         }
-        $id = $this->getStorage()->insert($dto->getData());
+        $id = $this->getStorage()->insert($dto->getDataForCreate());
         $this->afterInsert($data);
 
         return $id;

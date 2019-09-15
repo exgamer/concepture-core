@@ -2,6 +2,7 @@
 namespace concepture\core\base;
 
 use concepture\core\helpers\ContainerHelper;
+use concepture\core\validator\OnlyReadValidator;
 use concepture\core\validator\ProtectedValidator;
 
 /**
@@ -13,6 +14,7 @@ abstract class Dto extends BaseObject
 {
     protected $errors = [];
     protected $protectedData = [];
+    protected $onlyReadData = [];
     private $data = [];
 
     public function rules()
@@ -139,6 +141,9 @@ abstract class Dto extends BaseObject
         if ($validator instanceof ProtectedValidator){
             $this->protectedData[$name] = $name;
         }
+        if ($validator instanceof OnlyReadValidator){
+            $this->onlyReadData[$name] = $name;
+        }
     }
 
     /**
@@ -177,6 +182,27 @@ abstract class Dto extends BaseObject
     /**
      * @return array
      */
+    public function getDataForCreate()
+    {
+        $data = $this->getData();
+        $result = [];
+        $attributes = array_keys($this->rules());
+        foreach ($attributes as $attribute){
+            if (in_array($attribute, $this->onlyReadData)){
+                continue;
+            }
+            if (!isset($data[$attribute])){
+                continue;
+            }
+            $result[$attribute] = $data[$attribute];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
     public function getDataForUpdate()
     {
         $data = $this->getData();
@@ -184,6 +210,9 @@ abstract class Dto extends BaseObject
         $attributes = array_keys($this->rules());
         foreach ($attributes as $attribute){
             if (in_array($attribute, $this->protectedData)){
+                continue;
+            }
+            if (in_array($attribute, $this->onlyReadData)){
                 continue;
             }
             if (!isset($data[$attribute])){
