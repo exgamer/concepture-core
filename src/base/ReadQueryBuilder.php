@@ -8,51 +8,66 @@ use concepture\core\enum\DbQueryEnum;
  *
  * @author citizenzer <exgamer@live.ru>
  */
-class DbReadConditionBuilder extends DbDataReadCondition
+class ReadQueryBuilder extends DbQueryBuilder
 {
-    protected $where = [];
+    use WhereTrait;
+
     protected $join = [];
     protected $select = [];
     protected $table;
     protected $order = null;
     protected $limit = null;
-    protected $offest = null;
+    protected $offset = null;
 
     public function select($items)
     {
         foreach ($items as $item){
             $this->select[] = $item;
         }
+
+        return $this;
     }
 
     public function from($table)
     {
         $this->table = $table;
+
+        return $this;
     }
 
     public function join($table, $on, $params = [])
     {
         $this->setJoin($table, $on, DbQueryEnum::JOIN, $params);
+
+        return $this;
     }
 
     public function outerJoin($table, $on, $params = [])
     {
         $this->setJoin($table, $on, DbQueryEnum::OUTER_JOIN, $params);
+
+        return $this;
     }
 
     public function innerJoin($table, $on, $params = [])
     {
         $this->setJoin($table, $on, DbQueryEnum::INNER_JOIN, $params);
+
+        return $this;
     }
 
     public function rightJoin($table, $on, $params = [])
     {
         $this->setJoin($table, $on, DbQueryEnum::RIGHT_JOIN, $params);
+
+        return $this;
     }
 
     public function leftJoin($table, $on, $params = [])
     {
         $this->setJoin($table, $on, DbQueryEnum::LEFT_JOIN, $params);
+
+        return $this;
     }
 
     protected function setJoin($table, $on, $type = DbQueryEnum::LEFT_JOIN, $params = [])
@@ -67,43 +82,28 @@ class DbReadConditionBuilder extends DbDataReadCondition
         }
     }
 
-    public function orWhere($sqlCondition, $params = [])
-    {
-        $this->where($sqlCondition, DbQueryEnum::OPERATOR_OR, $params);
-    }
-
-    public function andWhere($sqlCondition, $params = [])
-    {
-        $this->where($sqlCondition, DbQueryEnum::OPERATOR_AND, $params);
-    }
-
-    protected function where($sqlCondition, $operator, $params = [])
-    {
-        $this->where[] = [
-            $operator,
-            $sqlCondition
-        ];
-        foreach ($params as $key=>$value){
-            $this->params[$key] = $value;
-        }
-    }
-
     public function order($order)
     {
         $this->order = $order;
+
+        return $this;
     }
 
     public function limit($limit)
     {
-        $this->limit = $limit;
+        $this->limit = (int) $limit;
+
+        return $this;
     }
 
     public function offset($offset)
     {
-        $this->offset = $offset;
+        $this->offset = (int) $offset;
+
+        return $this;
     }
 
-    public function makeFullSql()
+    public function makeSelectSql()
     {
         $sql = "SELECT ";
         if (empty($this->select)){
@@ -120,9 +120,12 @@ class DbReadConditionBuilder extends DbDataReadCondition
         if ($this->limit){
             $sql .= " LIMIT ". $this->limit;
         }
-        if ($this->offest){
-            $sql .= " OFFSET ". $this->offest;
+        if ($this->offset){
+            $sql .= " OFFSET ". $this->offset;
         }
+        $this->sql = $sql;
+
+        return $this;
     }
 
     public function makeJoinSql()
@@ -134,24 +137,6 @@ class DbReadConditionBuilder extends DbDataReadCondition
                 $join[] = $join[0]. " " . $join[1] . " " . $join[2];
             }
             $sql .= implode(" ", $join);
-        }
-
-        return $sql;
-    }
-
-    public function makeWhereSql()
-    {
-        $sql = " ";
-        if (! empty($this->where)){
-            $where = [];
-            foreach ($this->where as $key => $where){
-                if ($key == 0){
-                    $where[] = $where[1];
-                    continue;
-                }
-                $where[] = $where[0] . " " . $where[1];
-            }
-            $sql .= " WHERE " . implode(" ", $where);
         }
 
         return $sql;

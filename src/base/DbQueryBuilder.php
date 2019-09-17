@@ -2,24 +2,16 @@
 namespace concepture\core\base;
 
 /**
- * DbDataReadCondition
+ * DbQueryBuilder
  *
  * @author citizenzer <exgamer@live.ru>
  */
-abstract class DbDataReadCondition extends DataReadCondition
+abstract class DbQueryBuilder extends QueryBuilder
 {
     protected $sql;
     protected $params = [];
 
-    public function setSql($sql)
-    {
-        $this->sql = $sql;
-    }
 
-    public function setParams($params)
-    {
-        $this->params = $params;
-    }
 
     public function getSql()
     {

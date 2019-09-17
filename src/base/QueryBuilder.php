@@ -2,11 +2,11 @@
 namespace concepture\core\base;
 
 /**
- * DataReadCondition
+ * QueryBuilder
  *
  * @author citizenzer <exgamer@live.ru>
  */
-class DataReadCondition extends BaseObject
+class QueryBuilder extends BaseObject
 {
 
 
