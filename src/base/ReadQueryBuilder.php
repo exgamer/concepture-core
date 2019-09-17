@@ -8,7 +8,7 @@ use concepture\core\enum\DbQueryEnum;
  *
  * @author citizenzer <exgamer@live.ru>
  */
-class ReadQueryBuilder extends DbQueryBuilder
+class ReadQueryBuilder extends BaseReadQueryBuilder
 {
     use WhereTrait;
 
