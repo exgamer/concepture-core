@@ -3,6 +3,7 @@ namespace concepture\core\service;
 
 use concepture\core\base\Component;
 use concepture\core\base\DataReadConfig;
+use concepture\core\base\DataValidationErrors;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
@@ -14,52 +15,83 @@ abstract class Service extends Component
     public $storageDir = null;
     public $storageConfig = [];
 
-    public function insert(&$data)
+    public function insert($data)
     {
-        $this->beforeInsert($data);
-        $dto = $this->getDto();
-        $dto->load($data);
-        if ($dto->hasErrors()){
-            return $dto->getErrors();
+        $data = $this->validateInsertData($data);
+        if ($data instanceof DataValidationErrors){
+
+            return $data;
         }
-        $id = $this->getStorage()->insert($dto->getDataForCreate());
+        $this->beforeInsert($data);
+        $this->beforeInsertExternal($data);
+        $id = $this->getStorage()->insert($data);
         $this->afterInsert($data);
+        $this->afterInsertExternal($data);
 
         return $id;
     }
 
-    protected function beforeInsert(&$data){}
-    protected function afterInsert(&$data){}
-
-    public function update($data, $condition)
+    protected function validateInsertData($data)
     {
-        $this->beforeUpdate($data, $condition);
         $dto = $this->getDto();
         $dto->load($data);
         if ($dto->hasErrors()){
+
             return $dto->getErrors();
         }
-        $this->getStorage()->update($dto->getDataForUpdate(), $condition);
+
+        return $dto->getDataForCreate();
+    }
+
+    protected function beforeInsert(&$data){}
+    protected function afterInsert(&$data){}
+    protected function beforeInsertExternal(&$data){}
+    protected function afterInsertExternal(&$data){}
+
+    public function update($data, $condition)
+    {
+        $data = $this->validateUpdateData($data);
+        if ($data instanceof DataValidationErrors){
+
+            return $data;
+        }
+        $this->beforeUpdate($data, $condition);
+        $this->beforeUpdateExternal($data, $condition);
+        $this->getStorage()->update($data, $condition);
         $this->afterUpdate($data, $condition);
+        $this->afterUpdateExternal($data, $condition);
+    }
+
+    protected function validateUpdateData($data)
+    {
+        $dto = $this->getDto();
+        $dto->load($data);
+        if ($dto->hasErrors()){
+
+            return $dto->getErrors();
+        }
+
+        return $dto->getDataForUpdate();
     }
 
     protected function beforeUpdate(&$data, $condition){}
     protected function afterUpdate(&$data, $condition){}
+    protected function beforeUpdateExternal(&$data, $condition){}
+    protected function afterUpdateExternal(&$data, $condition){}
 
     public function delete($condition)
     {
         $this->beforeDelete($condition);
-        $dto = $this->getDto();
-        $dto->load($condition);
-        if ($dto->hasErrors()){
-            return $dto->getErrors();
-        }
-        $this->getStorage()->delete($dto->getData());
+        $this->beforeDeleteExternal($condition);
+        $this->getStorage()->delete($condition);
         $this->afterDelete($condition);
+        $this->afterDeleteExternal($condition);
     }
 
     protected function beforeDelete($condition){}
     protected function afterDelete($condition){}
+    protected function beforeDeleteExternal($condition){}
+    protected function afterDeleteExternal($condition){}
 
     public function one($condition, $storageMethod = "one")
     {
@@ -73,13 +105,7 @@ abstract class Service extends Component
 
     public function read($condition, $storageMethod, DataReadConfig $config = null)
     {
-        $dto = $this->getDto();
-        $dto->read();
-        $dto->load($condition);
-        if ($dto->hasErrors()){
-            return $dto->getErrors();
-        }
-        return $this->getStorage()->{$storageMethod}($dto->getDataForRead(), $config);
+        return $this->getStorage()->{$storageMethod}($condition, $config);
     }
 
     public function __call($method, $parameters)

@@ -37,6 +37,38 @@ trait WhereTrait
         }
     }
 
+    public function andInCondition($field, $data)
+    {
+        $this->inCondition($field, $data, DbQueryEnum::OPERATOR_AND );
+
+        return $this;
+    }
+
+    public function orInCondition($field, $data)
+    {
+        $this->inCondition($field, $data, DbQueryEnum::OPERATOR_OR );
+
+        return $this;
+    }
+
+    protected function inCondition($field, $data, $operator)
+    {
+        $sql = "";
+        $sql .= "{$field} IN (";
+        $parts = [];
+        $params = [];
+        foreach ($data as $key => $d){
+            $parts[] = ":".$key.$field;
+            $params[":".$key.$field] = $d;
+        }
+        $sql .= implode(",",  $parts);
+        $sql .= ")";
+
+        $this->where($sql, $operator, $params);
+
+        return $this;
+    }
+
     protected function makeWhereSql()
     {
         $sql = " ";

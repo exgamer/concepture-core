@@ -82,6 +82,14 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         return $stmt->execute();
     }
 
+    public function oneById($id)
+    {
+        $builder = new ReadQueryBuilder();
+        $builder->andWhere('id=:id', [':id' => $id]);
+
+        return $this->one($builder);
+    }
+
     public function one(BaseReadQueryBuilder $builder)
     {
         $this->extendBuilder($builder);
@@ -95,6 +103,14 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         $stmt->execute();
 
         return $stmt->fetch();
+    }
+
+    public function allByIds($ids)
+    {
+        $builder = new ReadQueryBuilder();
+        $builder->andInCondition('id', $ids);
+
+        return $this->all($builder);
     }
 
     public function all(BaseReadQueryBuilder $builder)
