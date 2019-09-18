@@ -3,7 +3,7 @@ namespace concepture\core\base;
 
 interface ReadInterface
 {
-    public function one(BaseReadQueryBuilder $builder);
+    public function one($condition);
 
-    public function all(BaseReadQueryBuilder $builder);
+    public function all($condition, DataReadConfig $config);
 }

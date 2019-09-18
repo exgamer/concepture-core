@@ -37,6 +37,29 @@ trait WhereTrait
         }
     }
 
+    public function andEqualCondition($data)
+    {
+        $this->equalCondition($data, DbQueryEnum::OPERATOR_AND);
+
+        return $this;
+    }
+
+    public function orEqualCondition($data)
+    {
+        $this->equalCondition($data, DbQueryEnum::OPERATOR_OR);
+
+        return $this;
+    }
+
+    protected function equalCondition($data, $operator)
+    {
+        foreach ($data as $field => $value){
+            $this->where($field."=:".$field, $operator, [":".$field => $value]);
+        }
+
+        return $this;
+    }
+
     public function andInCondition($field, $data)
     {
         $this->inCondition($field, $data, DbQueryEnum::OPERATOR_AND );

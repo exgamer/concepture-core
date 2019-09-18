@@ -2,7 +2,6 @@
 namespace concepture\core\service;
 
 use concepture\core\base\Component;
-use concepture\core\base\DataReadConfig;
 use concepture\core\base\DataValidationErrors;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
@@ -93,20 +92,20 @@ abstract class Service extends Component
     protected function beforeDeleteExternal($condition){}
     protected function afterDeleteExternal($condition){}
 
-    public function one($condition, $storageMethod = "one")
-    {
-        return $this->read($condition, $storageMethod);
-    }
-
-    public function all($condition, DataReadConfig $config, $storageMethod = "all")
-    {
-        return $this->read($condition, $storageMethod, $config);
-    }
-
-    public function read($condition, $storageMethod, DataReadConfig $config = null)
-    {
-        return $this->getStorage()->{$storageMethod}($condition, $config);
-    }
+//    public function one($condition, $storageMethod = "one")
+//    {
+//        return $this->read($condition, $storageMethod);
+//    }
+//
+//    public function all($condition, DataReadConfig $config, $storageMethod = "all")
+//    {
+//        return $this->read($condition, $storageMethod, $config);
+//    }
+//
+//    public function read($condition, $storageMethod, DataReadConfig $config = null)
+//    {
+//        return $this->getStorage()->{$storageMethod}($condition, $config);
+//    }
 
     public function __call($method, $parameters)
     {
