@@ -49,6 +49,15 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         return $stmt->execute();
     }
 
+    public function updateById($id, $params)
+    {
+        $condition = [
+            'id' => $id
+        ];
+
+        return $this->update($params, $condition);
+    }
+
     public function update($params, $condition)
     {
         $builder = new ModifyQueryBuilder();
