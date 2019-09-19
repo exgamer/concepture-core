@@ -132,11 +132,11 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
     {
         $sql = "";
         if (! empty($this->join)){
-            $join = [];
+            $joinArray = [];
             foreach ($this->join as $join){
-                $join[] = $join[0]. " " . $join[1] . " " . $join[2];
+                $joinArray[] = $join[0]. " " . $join[1] . " " . $join[2];
             }
-            $sql .= implode(" ", $join);
+            $sql .= implode(" ", $joinArray);
         }
 
         return $sql;
