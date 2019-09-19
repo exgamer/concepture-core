@@ -96,15 +96,15 @@ trait WhereTrait
     {
         $sql = " ";
         if (! empty($this->where)){
-            $where = [];
+            $whereArray = [];
             foreach ($this->where as $key => $where){
                 if ($key == 0){
-                    $where[] = $where[1];
+                    $whereArray[] = $where[1];
                     continue;
                 }
-                $where[] = $where[0] . " " . $where[1];
+                $whereArray[] = $where[0] . " " . $where[1];
             }
-            $sql .= " WHERE " . implode(" ", $where);
+            $sql .= " WHERE " . implode(" ", $whereArray);
         }
 
         return $sql;
