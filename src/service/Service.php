@@ -6,7 +6,7 @@ use concepture\core\base\DataValidationErrors;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
-use concepture\core\storage\Storage;
+use concepture\core\storage\DbStorage;
 
 abstract class Service extends Component
 {
@@ -119,7 +119,7 @@ abstract class Service extends Component
     }
 
     /**
-     * @return Storage
+     * @return DbStorage
      */
     protected function getStorage()
     {
