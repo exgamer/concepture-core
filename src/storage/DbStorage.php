@@ -110,7 +110,7 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         }
         $stmt->execute();
 
-        return $stmt->fetch();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     protected function fetchAll(BaseReadQueryBuilder $builder)
@@ -125,7 +125,7 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         }
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     protected function extendBuilder($builder)
