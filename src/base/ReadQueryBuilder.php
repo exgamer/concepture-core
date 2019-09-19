@@ -112,8 +112,8 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
             $sql .= implode(",", $this->select);
         }
         $sql .= " FROM " . $this->table;
-        $sql .= $this->makeJoinSql();
-        $sql .= $this->makeWhereSql();
+        $sql .= " ". $this->makeJoinSql();
+        $sql .= " ".$this->makeWhereSql();
         if ($this->order){
             $sql .= " ORDER BY ". $this->order;
         }
