@@ -111,7 +111,7 @@ abstract class Service extends Component
     {
         if (method_exists($this,$method))
         {
-            return parent::__call($method, $parameters);
+            parent::__call($method, $parameters);
         }
         $storage = $this->getStorage();
         if (method_exists($storage,$method))
