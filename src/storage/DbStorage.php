@@ -75,6 +75,15 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
         return $stmt->execute();
     }
 
+    public function deleteById($id)
+    {
+        $condition = [
+            'id' => $id
+        ];
+
+        return $this->delete($condition);
+    }
+
     public function delete($condition)
     {
         $builder = new ModifyQueryBuilder();
