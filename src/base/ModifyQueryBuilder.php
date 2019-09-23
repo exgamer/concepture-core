@@ -51,7 +51,7 @@ class ModifyQueryBuilder extends DbQueryBuilder
             $this->params[":" . $name] = $value;
         }
         $cols = implode(",", $cols);
-        $sql = "UPDATE {$this->table}  SET ({$cols}) ";
+        $sql = "UPDATE {$this->table}  SET {$cols} ";
         $sql .= $this->makeWhereSql();
         $this->sql = $sql;
 
