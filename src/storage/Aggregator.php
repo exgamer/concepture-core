@@ -9,7 +9,6 @@ use Exception;
 abstract class Aggregator extends Storage implements TransactionInterface
 {
     private $_storages;
-    protected $storageConfig = [];
 
     protected abstract function storages();
 
@@ -37,7 +36,9 @@ abstract class Aggregator extends Storage implements TransactionInterface
             $className = ArrayHelper::getValue($config, 0);
             $arguments = ArrayHelper::getValue($config, 1, []);
         }
-        $arguments = ArrayHelper::merge($arguments, $this->storageConfig);
+        $arguments = ArrayHelper::merge($arguments, [
+            'connection' => $this->getConnection()
+        ]);
         $storageConfig = [
             $className,
             $arguments
