@@ -6,7 +6,7 @@ use concepture\core\base\DataValidationErrors;
 use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
-use concepture\core\storage\DbStorage;
+use concepture\core\storage\Storage;
 
 abstract class Service extends Component
 {
@@ -123,7 +123,7 @@ abstract class Service extends Component
     }
 
     /**
-     * @return DbStorage
+     * @return Storage
      */
     protected function getStorage()
     {
@@ -141,17 +141,17 @@ abstract class Service extends Component
         return $this->_storage;
     }
 
-    protected function getStorageClass($folder = "storage")
+    protected function getStorageClass($storagePostfix = "Storage", $folder = "storage")
     {
         $className = get_class($this);
-        $name = ClassHelper::getName($className, "Service");
+        $name = ClassHelper::getName($className, self::class);
         $nameSpace = ClassHelper::getNamespace($className);
         $extPath = "";
         if ($this->storageDir){
             $extPath .= $this->storageDir.'\\';
         }
 
-        return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name."Storage";
+        return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name.$storagePostfix;
     }
 
     /**
@@ -172,7 +172,7 @@ abstract class Service extends Component
     protected function getDtoClass($folder = "dto")
     {
         $className = get_class($this);
-        $name = ClassHelper::getName($className, "Service");
+        $name = ClassHelper::getName($className, self::class);
         $nameSpace = ClassHelper::getNamespace($className);
 
         return  $nameSpace."\\".$folder."\\".$name."Dto";
