@@ -12,16 +12,16 @@ trait WhereTrait
 {
     protected $where = [];
 
-    public function orWhere($sqlCondition, $params = [])
+    public function orWhere($condition, $params = [])
     {
-        $this->resolveWhere($sqlCondition, DbQueryEnum::OPERATOR_OR, $params);
+        $this->resolveWhere($condition, DbQueryEnum::OPERATOR_OR, $params);
 
         return $this;
     }
 
-    public function andWhere($sqlCondition, $params = [])
+    public function andWhere($condition, $params = [])
     {
-        $this->resolveWhere($sqlCondition, DbQueryEnum::OPERATOR_AND, $params);
+        $this->resolveWhere($condition, DbQueryEnum::OPERATOR_AND, $params);
 
         return $this;
     }
@@ -37,30 +37,30 @@ trait WhereTrait
         $this->where($condition, $operator, $params);
     }
 
-    protected function where($sqlCondition, $operator, $params = [])
+    protected function where($condition, $operator, $params = [])
     {
         $this->where[] = [
             $operator,
-            $sqlCondition
+            $condition
         ];
         foreach ($params as $key=>$value){
             $this->params[$key] = $value;
         }
     }
 
-    public function andEqualCondition($data)
-    {
-        $this->equalCondition($data, DbQueryEnum::OPERATOR_AND);
-
-        return $this;
-    }
-
-    public function orEqualCondition($data)
-    {
-        $this->equalCondition($data, DbQueryEnum::OPERATOR_OR);
-
-        return $this;
-    }
+//    public function andEqualCondition($data)
+//    {
+//        $this->equalCondition($data, DbQueryEnum::OPERATOR_AND);
+//
+//        return $this;
+//    }
+//
+//    public function orEqualCondition($data)
+//    {
+//        $this->equalCondition($data, DbQueryEnum::OPERATOR_OR);
+//
+//        return $this;
+//    }
 
     protected function equalCondition($data, $operator)
     {

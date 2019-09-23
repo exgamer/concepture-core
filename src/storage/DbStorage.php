@@ -103,7 +103,7 @@ abstract class DbStorage extends Storage implements ReadInterface, ModifyInterfa
     public function oneById($id)
     {
         $builder = new ReadQueryBuilder();
-        $builder->andEqualCondition(['id' => $id]);
+        $builder->andWhere(['id' => $id]);
 
         return $this->fetchOne($builder);
     }
