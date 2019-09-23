@@ -28,7 +28,7 @@ abstract class Storage extends BaseStorage implements ReadInterface, ModifyInter
     public function getTableName()
     {
         $className = get_class($this);
-        $name = ClassHelper::getName($className, self::class);
+        $name = ClassHelper::getName($className, ClassHelper::getName(self::class));
 
         return  StringHelper::fromCamelCase($name);
     }

@@ -144,7 +144,7 @@ abstract class Service extends Component
     protected function getStorageClass($storagePostfix = "Storage", $folder = "storage")
     {
         $className = get_class($this);
-        $name = ClassHelper::getName($className, self::class);
+        $name = ClassHelper::getName($className, ClassHelper::getName(self::class));
         $nameSpace = ClassHelper::getNamespace($className);
         $extPath = "";
         if ($this->storageDir){
@@ -172,7 +172,7 @@ abstract class Service extends Component
     protected function getDtoClass($folder = "dto")
     {
         $className = get_class($this);
-        $name = ClassHelper::getName($className, self::class);
+        $name = ClassHelper::getName($className, ClassHelper::getName(self::class));
         $nameSpace = ClassHelper::getNamespace($className);
 
         return  $nameSpace."\\".$folder."\\".$name."Dto";
