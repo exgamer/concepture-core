@@ -14,16 +14,27 @@ trait WhereTrait
 
     public function orWhere($sqlCondition, $params = [])
     {
-        $this->where($sqlCondition, DbQueryEnum::OPERATOR_OR, $params);
+        $this->resolveWhere($sqlCondition, DbQueryEnum::OPERATOR_OR, $params);
 
         return $this;
     }
 
     public function andWhere($sqlCondition, $params = [])
     {
-        $this->where($sqlCondition, DbQueryEnum::OPERATOR_AND, $params);
+        $this->resolveWhere($sqlCondition, DbQueryEnum::OPERATOR_AND, $params);
 
         return $this;
+    }
+
+    protected function resolveWhere($condition, $operator, $params= [])
+    {
+        if (is_array($condition)){
+            $this->equalCondition($condition, $operator);
+
+            return;
+        }
+
+        $this->where($condition, $operator, $params);
     }
 
     protected function where($sqlCondition, $operator, $params = [])
