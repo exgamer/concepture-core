@@ -45,8 +45,10 @@ abstract class Storage extends BaseStorage implements ReadInterface, ModifyInter
         foreach ($params as $name => $value){
             $stmt->bindValue($name, $value);
         }
+        $stmt->execute();
+        $stmt = $this->getConnection()->query('SELECT last_insert_id()');
 
-        return $stmt->execute();
+        return $stmt->fetchColumn();
     }
 
     public function updateById($id, $params)
