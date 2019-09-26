@@ -14,7 +14,9 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
 
     protected $join = [];
     protected $select = [];
+    protected $calcRows = false;
     protected $table;
+    protected $tableAlias;
     protected $order = null;
     protected $limit = null;
     protected $offset = null;
@@ -31,6 +33,20 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
     public function from($table)
     {
         $this->table = $table;
+
+        return $this;
+    }
+
+    public function alias($tableAlias)
+    {
+        $this->tableAlias = $tableAlias;
+
+        return $this;
+    }
+
+    public function calcRows()
+    {
+        $this->calcRows = true;
 
         return $this;
     }
@@ -106,12 +122,18 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
     public function makeSelectSql()
     {
         $sql = "SELECT ";
+        if ($this->calcRows){
+            $sql .= " SQL_CALC_FOUND_ROWS ";
+        }
         if (empty($this->select)){
             $sql .= "*";
         }else{
             $sql .= implode(",", $this->select);
         }
         $sql .= " FROM " . $this->table;
+        if ($this->tableAlias){
+            $sql .= " " . $this->tableAlias;
+        }
         $sql .= " ". $this->makeJoinSql();
         $sql .= " ".$this->makeWhereSql();
         if ($this->order){
@@ -134,7 +156,7 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
         if (! empty($this->join)){
             $joinArray = [];
             foreach ($this->join as $join){
-                $joinArray[] = $join[0]. " " . $join[1] . " " . $join[2];
+                $joinArray[] = $join[0]. " " . $join[1] . " ON " . $join[2];
             }
             $sql .= implode(" ", $joinArray);
         }
