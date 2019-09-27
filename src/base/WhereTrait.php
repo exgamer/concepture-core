@@ -78,6 +78,7 @@ trait WhereTrait
         $parts = [];
         $params = [];
         foreach ($data as $key => $d){
+            $field = preg_replace('/[^ a-zA-Z\d]/ui', '',$field );
             $parts[] = ":".$key.$field;
             $params[":".$key.$field] = $d;
         }
