@@ -74,15 +74,27 @@ abstract class Enum {
      *   3 => "ro"
      *  ]
      *
+     * Для получения массива с ключами метками используем $reverse = true
+     * @param bool $reverse
+     * Для получения массива где метки это и ключи и значения
+     * @param bool $labelsAsKeys
      * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function arrayList() {
+    public static function arrayList($reverse = false, $labelsAsKeys = false) {
         $values = self::all();
         $list = [];
 
         foreach ($values as $value){
-            $list[$value] = self::label($value);
+            $key = $value;
+            if ($labelsAsKeys){
+                $key = self::label($value);
+            }
+            $list[$key] = self::label($value);
+        }
+
+        if ($reverse){
+            return array_flip($list);
         }
 
         return $list;
