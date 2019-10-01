@@ -35,20 +35,29 @@ abstract class Storage extends BaseStorage implements ReadInterface, ModifyInter
 
     public function insert($params)
     {
-        $builder = new ModifyQueryBuilder();
-        $builder->table($this->getTableName());
-        $builder->data($params);
-        $builder->makeInsertSql();
-        $sql = $builder->getSql();
-        $params = $builder->getParams();
-        $stmt = $this->getConnection()->prepare($sql);
-        foreach ($params as $name => $value){
-            $stmt->bindValue($name, $value);
-        }
-        $stmt->execute();
-        $stmt = $this->getConnection()->query('SELECT last_insert_id()');
+        $this->getConnection()->beginTransaction();
+        try {
+            $builder = new ModifyQueryBuilder();
+            $builder->table($this->getTableName());
+            $builder->data($params);
+            $builder->makeInsertSql();
+            $sql = $builder->getSql();
+            $params = $builder->getParams();
+            $stmt = $this->getConnection()->prepare($sql);
+            foreach ($params as $name => $value){
+                $stmt->bindValue($name, $value);
+            }
+            $stmt->execute();
+            $stmt = $this->getConnection()->query('SELECT last_insert_id()');
+            $result = $stmt->fetchColumn();
+            $this->getConnection()->commit();
 
-        return $stmt->fetchColumn();
+            return $result;
+        }catch (\Exception $e){
+            $this->getConnection()->rollBack();
+
+            throw $e;
+        }
     }
 
     public function updateById($id, $params)

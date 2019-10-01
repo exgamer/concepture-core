@@ -47,18 +47,28 @@ abstract class Service extends Component
     protected function beforeInsertExternal(&$data){}
     protected function afterInsertExternal(&$data){}
 
-    public function update($data, $condition)
+    /**
+     * Обновление
+     *
+     * @param $id
+     * @param $data
+     *
+     * @return DataValidationErrors | null
+     */
+    public function update(int $id, array  $data)
     {
+        $oldData = $this->getOldData(['id' => $id]);
+        $changedData = $this->getChangedData($data, $oldData);
         $data = $this->validateUpdateData($data);
         if ($data instanceof DataValidationErrors){
 
             return $data;
         }
-        $this->beforeUpdate($data, $condition);
-        $this->beforeUpdateExternal($data, $condition);
-        $this->getStorage()->update($data, $condition);
-        $this->afterUpdate($data, $condition);
-        $this->afterUpdateExternal($data, $condition);
+        $this->preUpdate($id,$data, $oldData, $changedData);
+        $this->preUpdateExternal($id, $data, $oldData, $changedData);
+        $this->getStorage()->updateById($id, $data);
+        $this->postUpdate($id, $data, $oldData, $changedData);
+        $this->postUpdateExternal($id, $data, $oldData, $changedData);
     }
 
     protected function validateUpdateData($data)
@@ -73,24 +83,87 @@ abstract class Service extends Component
         return $dto->getDataForUpdate();
     }
 
-    protected function beforeUpdate(&$data, $condition){}
-    protected function afterUpdate(&$data, $condition){}
-    protected function beforeUpdateExternal(&$data, $condition){}
-    protected function afterUpdateExternal(&$data, $condition){}
+    /**
+     * Метод для дополнительной обработки текущей сущности перед обновлением
+     *
+     * @param int $id
+     * @param array $data
+     * @param array $oldData
+     * @param array $changedData
+     */
+    public function preUpdate(int $id, array  &$data,  array $oldData = [], array $changedData = []){}
 
-    public function delete($condition)
+    /**
+     * Метод для дополнительной обработки текущей сущности после обновления
+     *
+     * @param int $id
+     * @param array $data
+     * @param array $oldData
+     * @param array $changedData
+     */
+    public function postUpdate(int $id, array  &$data,  array $oldData = [], array $changedData = []){}
+
+    /**
+     * Метод для дополнительной обработки связанных сущностей перед обновлением
+     *
+     * @param int $id
+     * @param array $data
+     * @param array $oldData
+     * @param array $changedData
+     */
+    public function preUpdateExternal(int $id, array  &$data,  array $oldData = [], array $changedData = []){}
+
+    /**
+     * Метод для дополнительной обработки связанных сущностей после обновления
+     *
+     * @param int $id
+     * @param array $data
+     * @param array $oldData
+     * @param array $changedData
+     */
+    public function postUpdateExternal(int $id, array  &$data,  array $oldData = [], array $changedData = []){}
+
+    /**
+     * Удаление
+     *
+     * @param int $id
+     */
+    public function remove(int $id)
     {
-        $this->beforeDelete($condition);
-        $this->beforeDeleteExternal($condition);
-        $this->getStorage()->delete($condition);
-        $this->afterDelete($condition);
-        $this->afterDeleteExternal($condition);
+        $this->preRemove($id);
+        $this->preRemoveExternal($id);
+        $this->getStorage()->removeById($id);
+        $this->postRemove($id);
+        $this->postRemoveExternal($id);
     }
 
-    protected function beforeDelete($condition){}
-    protected function afterDelete($condition){}
-    protected function beforeDeleteExternal($condition){}
-    protected function afterDeleteExternal($condition){}
+    /**
+     * Метод для дополнительной обработки текущей сущности перед удалением
+     *
+     * @param int $id
+     */
+    public function preRemove(int $id){}
+
+    /**
+     * Метод для дополнительной обработки текущей сущности после удаления
+     *
+     * @param int $id
+     */
+    public function postRemove(int $id){}
+
+    /**
+     * Метод для дополнительной обработки связанных сущностей перед удалением
+     *
+     * @param int $id
+     */
+    public function preRemoveExternal(int $id){}
+
+    /**
+     * Метод для дополнительной обработки связанных сущностей после удаления
+     *
+     * @param int $id
+     */
+    public function postRemoveExternal(int $id){}
 
 //    public function one($condition, $storageMethod = "one")
 //    {
@@ -162,6 +235,52 @@ abstract class Service extends Component
         $dtoClass = $this->getDtoClass();
 
         return new $dtoClass();
+    }
+
+
+    /**
+     * Возвращает старую запись
+     *
+     * @param array $condition
+     * @return array
+     */
+    protected function getOldData(array $condition)
+    {
+
+        return [];
+    }
+
+    /**
+     * Возвращает массив с измененными данными
+     *
+     * @param array $data
+     * @param array $oldData
+     *
+     * Возвращает массив где значение массив данных где 1 элемент старове значение второй новое
+     * [
+     *      0 => 1,
+     *      1 => 2
+     * ]
+     *
+     * @return array
+     */
+    protected function getChangedData(array $data, array $oldData)
+    {
+        $changedData = [];
+        foreach ($oldData as $attr=>$value){
+            if (! isset($data[$attr])){
+                continue;
+            }
+            if ($value == $data[$attr]){
+                continue;
+            }
+            $changedData[$attr] = [
+                $value,
+                $data[$attr]
+            ];
+        }
+
+        return $changedData;
     }
 
     /**
