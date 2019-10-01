@@ -91,24 +91,26 @@ abstract class Enum {
     /**
      * Возвращает метку по значению константы из self::labels()
      * @param $key
+     * @param null $default
      * @return mixed|null
      */
-    public static function label($key) {
+    public static function label($key, $default = null) {
         $labels = static::labels();
 
         if (isset($labels[$key])){
             return $labels[$key];
         }
 
-        return null;
+        return $default;
     }
 
     /**
      * Вовзращает значение константы по метке из self::labels()
      * @param $value
-     * @return |null
+     * @param int $default
+     * @return int |null
      */
-    public static function key($value) {
+    public static function key($value, $default = 0) {
         $labels = static::labels();
         $labels = array_flip($labels);
 
@@ -116,7 +118,7 @@ abstract class Enum {
             return $labels[$value];
         }
 
-        return null;
+        return $default;
     }
 
     /**
