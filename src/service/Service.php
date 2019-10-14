@@ -7,11 +7,13 @@ use concepture\core\helpers\ContainerHelper;
 use concepture\core\storage\Storage;
 use concepture\core\traits\ServiceReadMethodsTrait;
 use concepture\core\traits\ServiceModifyMethodsTrait;
+use concepture\core\traits\LoggerTrait;
 
 abstract class Service extends Component
 {
-    use  ServiceModifyMethodsTrait;
+    use ServiceModifyMethodsTrait;
     use ServiceReadMethodsTrait;
+    use LoggerTrait;
 
     private $_storage;
     public $storageDir = null;
