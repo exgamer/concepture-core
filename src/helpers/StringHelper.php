@@ -3,6 +3,44 @@ namespace concepture\core\helpers;
 
 class StringHelper
 {
+    /** Проверка является ли строка underscore
+     * @param $string
+     * @return bool
+     */
+    public static function is_underscore($string)
+    {
+
+        if (preg_match('/^[a-z]+_[a-z]+$/i', $string)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function underscoreToCamelCase($string, $capitalizeFirstCharacter = false)
+    {
+
+        $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+
+        if (!$capitalizeFirstCharacter) {
+            $str[0] = strtolower($str[0]);
+        }
+
+        return $str;
+    }
+
+    public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false)
+    {
+
+        $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+
+        if (!$capitalizeFirstCharacter) {
+            $str[0] = strtolower($str[0]);
+        }
+
+        return $str;
+    }
+
     public static function fromCamelCase($input) {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
         $ret = $matches[0];

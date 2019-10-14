@@ -11,113 +11,13 @@ use concepture\core\enum\DbQueryEnum;
 class ReadQueryBuilder extends BaseReadQueryBuilder
 {
     use WhereTrait;
+    use JoinTrait;
+    use SelectionTrait;
+    use OrderTrait;
+    use LimitOffsetTrait;
+    use GroupTrait;
 
-    protected $join = [];
-    protected $select = [];
     protected $calcRows = false;
-    protected $table;
-    protected $tableAlias;
-    protected $order = null;
-    protected $limit = null;
-    protected $offset = null;
-
-    public function select($items)
-    {
-        foreach ($items as $item){
-            $this->select[] = $item;
-        }
-
-        return $this;
-    }
-
-    public function from($table)
-    {
-        $this->table = $table;
-
-        return $this;
-    }
-
-    public function alias($tableAlias)
-    {
-        $this->tableAlias = $tableAlias;
-
-        return $this;
-    }
-
-    public function calcRows()
-    {
-        $this->calcRows = true;
-
-        return $this;
-    }
-
-    public function join($table, $on, $params = [])
-    {
-        $this->setJoin($table, $on, DbQueryEnum::JOIN, $params);
-
-        return $this;
-    }
-
-    public function outerJoin($table, $on, $params = [])
-    {
-        $this->setJoin($table, $on, DbQueryEnum::OUTER_JOIN, $params);
-
-        return $this;
-    }
-
-    public function innerJoin($table, $on, $params = [])
-    {
-        $this->setJoin($table, $on, DbQueryEnum::INNER_JOIN, $params);
-
-        return $this;
-    }
-
-    public function rightJoin($table, $on, $params = [])
-    {
-        $this->setJoin($table, $on, DbQueryEnum::RIGHT_JOIN, $params);
-
-        return $this;
-    }
-
-    public function leftJoin($table, $on, $params = [])
-    {
-        $this->setJoin($table, $on, DbQueryEnum::LEFT_JOIN, $params);
-
-        return $this;
-    }
-
-    protected function setJoin($table, $on, $type = DbQueryEnum::LEFT_JOIN, $params = [])
-    {
-        $this->join[] = [
-            $type,
-            $table,
-            $on
-        ];
-        foreach ($params as $key=>$value){
-            $this->params[$key] = $value;
-        }
-    }
-
-    public function order($order)
-    {
-        $this->order = $order;
-
-        return $this;
-    }
-
-    public function limit($limit)
-    {
-        $this->limit = (int) $limit;
-
-        return $this;
-    }
-
-    public function offset($offset)
-    {
-        $this->offset = (int) $offset;
-
-        return $this;
-    }
 
     public function makeSelectSql()
     {
@@ -136,6 +36,9 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
         }
         $sql .= " ". $this->makeJoinSql();
         $sql .= " ".$this->makeWhereSql();
+        if ($this->group){
+            $sql .= " GROUP BY ". $this->group;
+        }
         if ($this->order){
             $sql .= " ORDER BY ". $this->order;
         }
@@ -162,5 +65,47 @@ class ReadQueryBuilder extends BaseReadQueryBuilder
         }
 
         return $sql;
+    }
+
+    /**
+     * загружает ReadQuery
+     *
+     * @param ReadCondition $readQuery
+     */
+    public function applyReadQuery(ReadCondition $readQuery)
+    {
+        if (! empty($readQuery->getSelect())){
+            $this->select = $readQuery->getSelect();
+        }
+        if (! empty($readQuery->getJoin())){
+            $this->join = $readQuery->getJoin();
+        }
+        if (! empty($readQuery->getOrder())){
+            $this->order = $readQuery->getOrder();
+        }
+        if (! empty($readQuery->getTable())){
+            $this->table = $readQuery->getTable();
+        }
+        if (! empty($readQuery->getTableAlias())){
+            $this->tableAlias = $readQuery->getTableAlias();
+        }
+        if (! empty($readQuery->getWhere())){
+            $this->where = $readQuery->getWhere();
+        }
+        if (! empty($readQuery->getLimit())){
+            $this->limit = $readQuery->getLimit();
+        }
+        if (! empty($readQuery->getOffset())){
+            $this->offset = $readQuery->getOffset();
+        }
+        if (! empty($readQuery->getOrder())){
+            $this->order = $readQuery->getOrder();
+        }
+        if (! empty($readQuery->getGroup())){
+            $this->group = $readQuery->getGroup();
+        }
+        if (! empty($readQuery->getParams())){
+            $this->params = $readQuery->getParams();
+        }
     }
 }
