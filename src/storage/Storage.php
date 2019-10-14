@@ -1,14 +1,12 @@
 <?php
 namespace concepture\core\storage;
 
-use concepture\core\base\ModifyInterface;
-use concepture\core\base\ReadInterface;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\StringHelper;
 use concepture\core\traits\StorageModifyMethodsTrait;
 use concepture\core\traits\StorageReadMethodsTrait;
 
-abstract class Storage extends BaseStorage implements ReadInterface, ModifyInterface
+abstract class Storage extends BaseStorage
 {
     use StorageModifyMethodsTrait;
     use StorageReadMethodsTrait;

@@ -1,19 +1,16 @@
 <?php
 namespace concepture\core\service;
 
-use concepture\core\base\Component;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
-use concepture\core\storage\Storage;
+use concepture\core\interfaces\StorageInterface;
 use concepture\core\traits\ServiceReadMethodsTrait;
 use concepture\core\traits\ServiceModifyMethodsTrait;
-use concepture\core\traits\LoggerTrait;
 
-abstract class Service extends Component
+abstract class Service extends Logic
 {
     use ServiceModifyMethodsTrait;
     use ServiceReadMethodsTrait;
-    use LoggerTrait;
 
     private $_storage;
     public $storageDir = null;
@@ -35,11 +32,11 @@ abstract class Service extends Component
     }
 
     /**
-     * @return Storage
+     * @return StorageInterface
      */
     protected function getStorage()
     {
-        if ($this->_storage instanceof Storage){
+        if ($this->_storage instanceof StorageInterface){
             return $this->_storage;
         }
         $className = $this->getStorageClass();
@@ -65,25 +62,4 @@ abstract class Service extends Component
 
         return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name.$storagePostfix;
     }
-
-    /**
-     * Методы логгера
-     */
-
-    public function extendLogContext($context)
-    {
-        $context['service'] = $this->getName();
-
-        return $context;
-    }
-
-
-    public function extendLogMessage($message)
-    {
-        return  $message." [".$this->getName()."]";
-    }
-
-    /**
-     * Методы логгера end
-     */
 }
