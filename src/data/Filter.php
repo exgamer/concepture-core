@@ -1,8 +1,6 @@
 <?php
 namespace concepture\core\data;
 
-
-
 use concepture\core\base\Component;
 use concepture\core\base\ReadCondition;
 
@@ -10,7 +8,7 @@ use concepture\core\base\ReadCondition;
  * Класс для настройки выборок
  *
  * Class Filter
- * @package Legal\Core\Data
+
  * @author citizenzet <exgamer@live.ru>
  */
 abstract class Filter extends Component

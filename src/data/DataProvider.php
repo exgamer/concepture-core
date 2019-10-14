@@ -7,7 +7,6 @@ use concepture\core\base\Component;
  * Базовый класс для постраничного получения данных из хранилища
  *
  * Class DataProvider
- * @package Legal\Core\Data
  * @author citizenzet <exgamer@live.ru>
  */
 abstract class DataProvider extends Component

@@ -9,7 +9,7 @@ use concepture\core\base\ReadCondition;
  * Класс для постраничного получения данных из хранилища
  *
  * Class DataProvider
- * @package Legal\SymfonyCore\Data
+
  * @author citizenzet <exgamer@live.ru>
  */
 class DataProvider extends Base
