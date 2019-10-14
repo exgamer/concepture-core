@@ -7,6 +7,7 @@ use concepture\core\base\Dto;
 use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\ContainerHelper;
 use concepture\core\storage\Storage;
+use concepture\core\traits\ServiceReadMethodsTrait;
 
 abstract class Service extends Component
 {
