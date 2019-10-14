@@ -17,7 +17,7 @@ abstract class Storage extends BaseStorage
      * @return \PDO
      * @throws \Exception
      */
-    public function getConnection()
+    protected function getConnection()
     {
         if (! $this->connection){
             throw new \Exception("Please set Db Connection");
@@ -25,7 +25,7 @@ abstract class Storage extends BaseStorage
         return $this->connection;
     }
 
-    public function getTableName()
+    protected function getTableName()
     {
         $className = get_class($this);
         $name = ClassHelper::getName($className, ClassHelper::getName(self::class));

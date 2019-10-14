@@ -3,6 +3,7 @@ namespace concepture\core\traits;
 
 
 use concepture\core\base\ModifyQueryBuilder;
+use Exception;
 
 trait StorageModifyMethodsTrait
 {
@@ -17,7 +18,7 @@ trait StorageModifyMethodsTrait
             $sql = $builder->getSql();
             $params = $builder->getParams();
             $stmt = $this->getConnection()->prepare($sql);
-            foreach ($params as $name => $value){
+            foreach ($params as $name => $value) {
                 $stmt->bindValue($name, $value);
             }
             $stmt->execute();
@@ -26,9 +27,8 @@ trait StorageModifyMethodsTrait
             $this->getConnection()->commit();
 
             return $result;
-        }catch (\Exception $e){
+        }catch (Exception $e){
             $this->getConnection()->rollBack();
-
             throw $e;
         }
     }
@@ -42,21 +42,32 @@ trait StorageModifyMethodsTrait
         return $this->update($params, $condition);
     }
 
+    /**
+     * Обновляет записи в базе данных
+     *
+     * @param array $params
+     * @param array|callable $condition
+     *
+     * Пример расширения запроса через $callback
+     * function(ModifyQueryBuilder $builder) {
+     *       $builder->andWhere("object_type = :object_type", [':object_type' => 2]);
+     * }
+     *
+     * @return bool
+     */
     public function update($params, $condition)
     {
         $builder = new ModifyQueryBuilder();
         $builder->table($this->getTableName());
         $builder->data($params);
-        $builder->andWhere($condition);
-        $builder->makeUpdateSql();
-        $sql = $builder->getSql();
-        $params = $builder->getParams();
-        $stmt = $this->getConnection()->prepare($sql);
-        foreach ($params as $name => $value){
-            $stmt->bindValue($name, $value);
+        if (is_callable($condition)){
+            call_user_func($condition, $builder);
+        }else{
+            $builder->andWhere($condition);
         }
+        $builder->makeUpdateSql();
 
-        return $stmt->execute();
+        return $this->execute($builder);
     }
 
     public function deleteById($id)
@@ -68,12 +79,39 @@ trait StorageModifyMethodsTrait
         return $this->delete($condition);
     }
 
+    /**
+     * Удаляет записи в базе данных
+     *
+     * @param array|callable $condition
+     *
+     * Пример расширения запроса через $callback
+     * function(ModifyQueryBuilder $builder) {
+     *       $builder->andWhere("object_type = :object_type", [':object_type' => 2]);
+     * }
+     * @return bool
+     */
     public function delete($condition)
     {
         $builder = new ModifyQueryBuilder();
         $builder->table($this->getTableName());
-        $builder->andWhere($condition);
+        if (is_callable($condition)){
+            call_user_func($condition, $builder);
+        }else{
+            $builder->andWhere($condition);
+        }
         $builder->makeDeleteSql();
+
+        return $this->execute($builder);
+    }
+
+    /**
+     * Выполняет запрос на модификацию
+     *
+     * @param ModifyQueryBuilder $builder
+     * @return mixed
+     */
+    private function execute(ModifyQueryBuilder $builder)
+    {
         $sql = $builder->getSql();
         $params = $builder->getParams();
         $stmt = $this->getConnection()->prepare($sql);
