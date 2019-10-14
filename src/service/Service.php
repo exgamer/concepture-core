@@ -13,6 +13,10 @@ abstract class Service extends Logic
     use ServiceReadMethodsTrait;
 
     private $_storage;
+    /**
+     * Своего рода драйвер репы
+     * @var string
+     */
     public $storageDir = null;
     public $storageConfig = [];
 
