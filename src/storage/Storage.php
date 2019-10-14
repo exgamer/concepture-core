@@ -5,6 +5,8 @@ use concepture\core\helpers\ClassHelper;
 use concepture\core\helpers\StringHelper;
 use concepture\core\traits\StorageModifyMethodsTrait;
 use concepture\core\traits\StorageReadMethodsTrait;
+use Exception;
+use PDO;
 
 abstract class Storage extends BaseStorage
 {
@@ -14,13 +16,13 @@ abstract class Storage extends BaseStorage
     protected $connection;
 
     /**
-     * @return \PDO
-     * @throws \Exception
+     * @return PDO
+     * @throws Exception
      */
     protected function getConnection()
     {
         if (! $this->connection){
-            throw new \Exception("Please set Db Connection");
+            throw new Exception("Please set Db Connection");
         }
         return $this->connection;
     }
