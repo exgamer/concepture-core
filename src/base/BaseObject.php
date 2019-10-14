@@ -1,6 +1,8 @@
 <?php
 namespace concepture\core\base;
 
+use concepture\core\helpers\ClassHelper;
+
 /**
  * Base object
  *
@@ -89,5 +91,15 @@ abstract class BaseObject
     public function hasMethod($name)
     {
         return method_exists($this, $name);
+    }
+
+    /**
+     * Возвращает имя класса
+     *
+     * @return string
+     */
+    protected function getName()
+    {
+        return ClassHelper::getName(get_class($this));
     }
 }

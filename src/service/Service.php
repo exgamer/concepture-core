@@ -65,4 +65,25 @@ abstract class Service extends Component
 
         return  $nameSpace.'\\'.$folder.'\\'.$extPath.$name.$storagePostfix;
     }
+
+    /**
+     * Методы логгера
+     */
+
+    public function extendLogContext($context)
+    {
+        $context['service'] = $this->getName();
+
+        return $context;
+    }
+
+
+    public function extendLogMessage($message)
+    {
+        return  $message." [".$this->getName()."]";
+    }
+
+    /**
+     * Методы логгера end
+     */
 }
