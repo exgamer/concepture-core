@@ -15,9 +15,9 @@ abstract class DataProvider extends Component
     private $totalCount = 0;
     private $page = 1;
     private $pageSize = 10;
-    private $filterClass;
     private $queryParams = [];
-
+    protected $dataReceiverConfig = [];
+    private $filterClass = "";
 
     public function init()
     {
@@ -35,11 +35,43 @@ abstract class DataProvider extends Component
     }
 
     /**
+     * @return string
+     */
+    public function getFilterClass()
+    {
+        return $this->filterClass;
+    }
+
+    /**
+     * @param string $filterClass
+     */
+    public function setFilterClass(string $filterClass): void
+    {
+        $this->filterClass = $filterClass;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataReceiverConfig(): array
+    {
+        return $this->dataReceiverConfig;
+    }
+
+    /**
+     * @param array $dataReceiverConfig
+     */
+    public function setDataReceiverConfig(array $dataReceiverConfig): void
+    {
+        $this->dataReceiverConfig = $dataReceiverConfig;
+    }
+
+    /**
      * Устанавливаем кол-во элементов
      *
      * @param integer $value
      */
-    protected function setTotalCount(int $value)
+    public function setTotalCount(int $value)
     {
         $this->totalCount = $value;
     }
@@ -49,7 +81,7 @@ abstract class DataProvider extends Component
      *
      * @return int
      */
-    protected function getPage(): int
+    public function getPage(): int
     {
         return $this->page;
     }
@@ -59,7 +91,7 @@ abstract class DataProvider extends Component
      *
      * @param int $page
      */
-    protected function setPage(int $page): void
+    public function setPage(int $page): void
     {
         $this->page = $page;
     }
@@ -69,7 +101,7 @@ abstract class DataProvider extends Component
      *
      * @return int
      */
-    protected function getPageSize(): int
+    public function getPageSize(): int
     {
         return $this->pageSize;
     }
@@ -79,7 +111,7 @@ abstract class DataProvider extends Component
      *
      * @param int $pageSize
      */
-    protected function setPageSize(int $pageSize): void
+    public function setPageSize(int $pageSize): void
     {
         $this->pageSize = $pageSize;
     }
@@ -89,31 +121,15 @@ abstract class DataProvider extends Component
      *
      * @param array $data
      */
-    protected function setData(array $data): void
+    public function setData(array $data): void
     {
         $this->data = $data;
     }
 
     /**
-     * @return string
-     */
-    protected function getFilterClass()
-    {
-        return $this->filterClass;
-    }
-
-    /**
-     * @param string $filterClass
-     */
-    protected function setFilterClass(string $filterClass): void
-    {
-        $this->filterClass = $filterClass;
-    }
-
-    /**
      * @return array
      */
-    protected function getQueryParams()
+    public function getQueryParams()
     {
         return $this->queryParams;
     }
@@ -121,7 +137,7 @@ abstract class DataProvider extends Component
     /**
      * @param array $queryParams
      */
-    protected function setQueryParams(array $queryParams): void
+    public function setQueryParams(array $queryParams): void
     {
         $this->queryParams = $queryParams;
     }
@@ -152,4 +168,24 @@ abstract class DataProvider extends Component
      * @return array
      */
     protected abstract function receiveData() : array;
+
+    /**
+     * @return DataReceiver
+     */
+    protected abstract function getDataReceiverClass();
+
+    protected function getDataReceiver()
+    {
+        $dataReceiverClass = $this->getDataReceiverClass();
+        $dataReceiverConfig = $this->getDataReceiverConfig();
+        if (! empty($dataReceiverConfig) && isset($dataReceiverConfig['class'])){
+            $dataReceiverClass = $dataReceiverConfig['class'];
+            unset($dataReceiverConfig['class']);
+        }
+
+        return new $dataReceiverClass([
+            "dataProvider" => $this,
+            "filterClass" => $this->getFilterClass(),
+        ]);
+    }
 }

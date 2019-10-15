@@ -17,13 +17,16 @@
 <?php
 
         $dp = new WebDataProvider([
-            'filterClass' =>  CasinoLocalizationFilter::class,
-            'queryParams' =>  $request->query->all(),
+            'dataReceiverConfig' => [
+                'class' => DataReciever::class, // необязательно
+            ],
+            'filterClass' =>  CasinoLocalizationFilter::class, //необязательно
+            'queryParams' =>  $request->query->all(), //необязательно
             'service' => $this->getCasinoLocalizationService(),
             'page' => 1,
-            'pageSize' => 2,
+            'pageSize' => 2, //необязательно
             'pagerConfig' => [
-                'shownPagesCount' => 100,
+                'shownPagesCount' => 100, //необязательно
                 'route' => $request->get("_route"),
                 'urlGenCallback' => function($route, $queryParams){
 
@@ -77,6 +80,8 @@ class CasinoLocalizationFilter extends Filter
 
 ```
 
+
+Использование QueryBuilder можно обойти созданием кастомного DataReciever и реализации в нем  метода receiveData()
 
 
 [Назад](../index.md "Необязательная подсказка")  
